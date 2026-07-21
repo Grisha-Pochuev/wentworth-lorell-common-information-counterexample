@@ -32,3 +32,5 @@ Only after these lemmas are proved and `lake build` succeeds with `--no-sorries`
 lake update
 lake build
 ```
+
+The first compiler audit was triggered after installing the temporary pull-request workflow in `main`.
