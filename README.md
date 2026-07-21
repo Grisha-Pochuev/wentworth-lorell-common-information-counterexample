@@ -1,210 +1,183 @@
 # A Block-Erasure Counterexample to Approximately Deterministic Maximal Common Information
 
-> **Current status:** a complete self-contained counterexample proof is included in this repository. The arithmetic checks pass automatically. External review and acceptance by the bounty authors are still pending.
+> **Result:** the dimension-free linear version of the Wentworth–Lorell problem is false. A complete counterexample proof and a reproducibility script are included.
 
-This repository is part of my personal project **The Open Mathematics Project**.
+## What is the problem?
 
-The idea of the project is simple: mathematical work should be open, readable, reusable, and independently checkable. A result should not appear only as a final claim. The definitions, proof, numerical margins, verification scripts, limitations, and remaining review status should all be visible.
+Suppose two observations, \(X_1\) and \(X_2\), both contain almost the same information about some latent variable \(\Gamma\).
 
-This repository studies the Wentworth–Lorell bounty problem:
+The proposed theorem asks whether there is always one distinguished latent variable \(\Omega\) that simultaneously has three properties:
 
-> Does every pair of finite random variables admit an approximately deterministic maximal redund with errors bounded by universal constant multiples of the allowed redundancy error?
+1. \(\Omega\) is itself approximately recoverable from either observation;
+2. \(\Omega\) contains essentially all information carried by every other approximately shared latent variable;
+3. \(\Omega\) is almost determined by the observed pair \((X_1,X_2)\).
 
-The original bounty page is:
+In the exact zero-error case, such a variable exists: it is the connected-component label of the bipartite support graph of the joint distribution. The question is whether this construction has a stable approximate analogue with errors bounded by universal constant multiples of the original approximation error.
 
-- John Wentworth and David Lorell, **“Does An (Approximately) Deterministic Maximal Redund Always Exist?”**  
-  https://www.lesswrong.com/posts/sCNdkuio62Fi9qQZK/usd500-usd500-bounty-problem-does-an-approximately
+A positive result would give a canonical summary of the information genuinely shared by two observations. The counterexample here shows that no such summary can satisfy dimension-independent linear bounds in full generality.
 
-As of the authors' 22 August 2025 edit, the remaining advertised bounty is **$500**.
+## Precise formulation
 
-## The problem in ordinary language
+All random variables are finite, and all information quantities are measured in bits.
 
-Suppose two observers, `X1` and `X2`, each contain nearly the same information about some hidden feature `Gamma`.
+A latent variable \(\Gamma\) is an \(\varepsilon\)-common variable for \(X_1,X_2\) when
 
-The hoped-for theorem says that there should be one master variable `Omega` with three properties:
+\[
+I(\Gamma;X_2\mid X_1)\leq\varepsilon,
+\qquad
+I(\Gamma;X_1\mid X_2)\leq\varepsilon.
+\]
 
-1. `Omega` is itself nearly recoverable from either observer;
-2. `Omega` contains essentially everything that any other approximately shared variable contains;
-3. `Omega` is almost determined by the observed pair `(X1, X2)`.
+The proposed conclusion asks for universal constants \(C_{\rm red},C_{\rm max},C_{\rm det}<\infty\) such that, for every \(X_1,X_2\) and every \(\varepsilon\geq0\), there is a latent variable \(\Omega\) satisfying
 
-In the exact zero-error case, such a master variable exists. It is the connected-component label in the bipartite support graph of the joint distribution. The bounty asks whether this exact construction has a stable approximate analogue with dimension-free linear error bounds.
+\[
+I(\Omega;X_2\mid X_1),
+\ I(\Omega;X_1\mid X_2)
+\leq C_{\rm red}\varepsilon,
+\]
 
-Why is this interesting? A positive theorem would provide a canonical summary of shared information. In the natural-latents programme, that could simplify comparisons between different probabilistic models and help explain when two different representations are really talking about the same underlying feature.
+\[
+I((X_1,X_2);\Gamma\mid\Omega)
+\leq C_{\rm max}\varepsilon
+\]
 
-## Main result claimed here
+for every \(\varepsilon\)-common variable \(\Gamma\), and
 
-The proposed dimension-free linear theorem is false.
+\[
+H(\Omega\mid X_1,X_2)
+\leq C_{\rm det}\varepsilon.
+\]
 
-For every pair of fixed finite constants `R` and `M`, there are finite random variables `X1, X2` and an error tolerance `epsilon` for which no variable `Omega` can simultaneously satisfy:
+## Main theorem proved here
 
-```text
-I(Omega ; X2 | X1) <= R epsilon,
-I(Omega ; X1 | X2) <= R epsilon,
-```
+For every fixed finite pair of constants \(R,M\), there exist finite random variables \(X_1,X_2\) and \(\varepsilon>0\) such that no latent variable \(\Omega\) can satisfy both
 
-and, for every competing `epsilon`-redund `Gamma`,
+\[
+I(\Omega;X_2\mid X_1),
+\ I(\Omega;X_1\mid X_2)
+\leq R\varepsilon
+\]
 
-```text
-I((X1, X2) ; Gamma | Omega) <= M epsilon.
-```
+and
 
-The approximate-determinism requirement is not used. Therefore the obstruction is stronger than needed: maximality and approximate redundancy already conflict.
+\[
+I((X_1,X_2);\Gamma\mid\Omega)
+\leq M\varepsilon
+\]
 
-## The counterexample in one picture
+for every \(\varepsilon\)-common variable \(\Gamma\).
 
-Let `S = (S1, ..., Sn)` be a uniformly random `n`-bit string.
+The approximate-determinism condition is not used. Thus the obstruction is stronger than required: approximate maximality and approximate commonality already contradict one another.
 
-- `X1` always sees all of `S`.
-- `X2` sees all of `S` with probability `1 - epsilon`.
-- With probability `epsilon`, `X2` sees only an erasure symbol `⊥`.
+The full argument is in [`PROOF.md`](PROOF.md).
 
-Each individual bit `Sj` is an allowed approximate redund:
+## Counterexample idea
 
-```text
-I(Sj ; X2 | X1) = 0,
-I(Sj ; X1 | X2) = epsilon.
-```
+Let
 
-So a maximal `Omega` must preserve almost every bit `Sj`. But on the rare erasure branch, `X2` knows none of the string. If `Omega` still preserves all `n` bits there, then
+\[
+S=(S_1,\ldots,S_n)
+\]
 
-```text
-I(X1 ; Omega | X2)
-```
+be a uniformly random \(n\)-bit string.
 
-is of order `n epsilon`, not merely a fixed constant times `epsilon`.
+- \(X_1\) always reveals the complete string \(S\).
+- With probability \(1-\varepsilon\), \(X_2\) also reveals \(S\).
+- With probability \(\varepsilon\), \(X_2\) shows only an erasure symbol.
 
-The rigorous proof shows that `Omega` cannot hide its information only on the erasure branch without violating its other redundancy condition. This is the key step.
+Each bit \(\Gamma_j=S_j\) is an admissible \(\varepsilon\)-common variable:
 
-## Explicit failure of the proposed factor 3
+\[
+I(S_j;X_2\mid X_1)=0,
+\qquad
+I(S_j;X_1\mid X_2)=\varepsilon.
+\]
 
-All information quantities are measured in bits. Take
+If \(\Omega\) is approximately maximal, it must retain enough information to predict every bit \(S_j\). The other commonality condition prevents \(\Omega\) from discarding all of this information only on the rare erasure event. Consequently, on that event \(\Omega\) still carries a positive constant fraction of all \(n\) bits.
 
-```text
-R = 3,
-M = 3,
-epsilon = 2^-18,
-n = 16.
-```
+This forces
+
+\[
+I(X_1;\Omega\mid X_2)
+\geq c\,n\varepsilon
+\]
+
+for an absolute constant \(c>0\), contradicting any bound of the form \(R\varepsilon\) when \(n\) is large enough.
+
+## Explicit finite instance
+
+The proposed factor \(3\) already fails for
+
+\[
+R=M=3,\qquad
+\varepsilon=2^{-18},\qquad
+n=16.
+\]
 
 The proof gives
 
-```text
-I(X1 ; Omega | X2)
-  > epsilon * 16 * (1 - h2(1/4))
-  = epsilon * 3.019550008...
-  > 3 epsilon.
-```
+\[
+d_2\!\left(\frac14\,\middle\|\,\frac{3\varepsilon}{2}\right)
+=3.5424874417\ldots>3
+\]
 
-Thus the factor-3 version cannot hold. The same construction defeats every fixed finite pair of constants after choosing a smaller erasure probability and a larger block length.
+and
 
-## Current verification level
+\[
+16\left(1-h_2\!\left(\frac14\right)\right)
+=3.0195500086\ldots>3.
+\]
 
-| Layer | Status | Where |
-|---|---|---|
-| Popular explanation | complete | this README |
-| Exact problem statement | complete | `docs/PROBLEM_STATEMENT.md` |
-| General counterexample theorem | complete draft | `proof/COUNTEREXAMPLE.md` |
-| Line-by-line proof audit | complete | `proof/PROOF_AUDIT.md` |
-| High-precision numerical margins | automated | `python run_checks.py` |
-| Regression tests | automated | `tests/test_verifier.py` |
-| GitHub Actions verification | configured | `.github/workflows/verify.yml` |
-| Full proof-assistant formalization | not yet complete | `formalization/README.md` |
-| Independent human review | pending | external |
-| Bounty-author acceptance | pending | external |
+Therefore every candidate \(\Omega\) violates at least one required inequality.
 
-The distinction between a complete proof draft and an accepted solution is intentional. The repository records what has been proved internally and what still depends on external review.
+## Reproduce the numerical checks
 
-## Reproduce the checks
-
-No external Python packages are required. Python 3.11 or later is recommended.
+Only Python's standard library is required.
 
 ```bash
-python run_checks.py
+python verify.py
 ```
 
-The command:
+The script:
 
-1. recomputes the binary-entropy constant at high precision;
-2. verifies the KL-divergence barrier used on the erasure branch;
-3. verifies the explicit `R = M = 3`, `epsilon = 2^-18`, `n = 16` contradiction;
-4. independently enumerates a small finite block-erasure distribution and recomputes the competitor mutual informations;
-5. runs independent regression tests;
-6. searches for valid parameters for several other fixed constants.
+- recomputes the entropy and binary-divergence constants at high precision;
+- verifies the strict inequalities for the explicit \(R=M=3\) instance;
+- independently enumerates a small block-erasure distribution and checks the two conditional mutual informations for a coordinate competitor;
+- verifies that suitable parameters are found for several other fixed constants.
 
-The script does **not** replace the proof. It checks every numerical and parameter-selection claim on which the explicit instance depends. The information-theoretic deductions are laid out separately in the proof and audit files.
+The script checks the finite construction and all numerical margins. The general reduction applying to every possible \(\Omega\) is the mathematical proof in `PROOF.md`.
 
-## Repository layout
+## Files
 
 ```text
-README.md                    Popular introduction and current status.
-START_HERE.md                Short navigation for reviewers.
-run_checks.py                One-command reproducibility entry point.
-docs/PROBLEM_STATEMENT.md    Precise formulation of the bounty problem.
-docs/REPRODUCIBILITY.md      What is and is not mechanically checked.
-proof/COUNTEREXAMPLE.md      Full general proof.
-proof/PROOF_AUDIT.md         Dependency and edge-case audit.
-tools/verify_counterexample.py
-                             High-precision arithmetic verifier.
-tools/finite_model_check.py  Independent finite-distribution enumeration.
-tests/test_verifier.py       Independent regression tests.
-formalization/README.md      Honest formalization boundary and Lean roadmap.
-.github/workflows/verify.yml Automatic verification on GitHub.
+README.md   Problem, significance, result, and reproduction instructions.
+PROOF.md    Complete information-theoretic proof.
+verify.py   Standalone numerical and finite-distribution verifier.
+LICENSE     MIT license.
 ```
 
-## Why no pretend Lean proof?
+## Scope of the result
 
-A useful formal proof must cover conditional entropy, conditional mutual information, KL divergence, data processing, Bayes error, and Fano's inequality in one coherent probability library. Formalizing only the decimal inequality `3.01955 > 3` would add little confidence while looking more impressive than it is.
+The counterexample rules out universal dimension-independent bounds of the form
 
-For now the source of truth is:
-
-- a self-contained mathematical proof;
-- a separate proof audit;
-- a deterministic high-precision arithmetic check;
-- automatic tests on every commit.
-
-The exact boundary and a staged Lean plan are recorded in `formalization/README.md`.
-
-## Limitations
-
-This counterexample rules out bounds of the form
-
-```text
-constant * epsilon
-```
-
-with constants independent of the alphabet size or block length.
+\[
+\text{constant}\times\varepsilon.
+\]
 
 It does not rule out:
 
-- bounds depending on dimension or entropy;
-- nonlinear bounds in the allowed redundancy error;
-- positive theorems under additional structural assumptions;
-- restricted distribution classes motivated by applications.
+- bounds depending on dimension, entropy, or alphabet size;
+- nonlinear dependence on \(\varepsilon\);
+- positive results under additional structural assumptions.
 
-Those remain legitimate directions after the dimension-free linear conjecture fails.
+## Repository philosophy
 
-## Project philosophy
+The aim is to make the result readable and independently checkable:
 
-This repository follows the spirit of **The Open Mathematics Project**:
+- explain the problem before presenting the technical proof;
+- separate the mathematical argument from numerical verification;
+- state constants and assumptions explicitly;
+- keep reproduction to one command;
+- record exactly what the counterexample proves and what it does not prove.
 
-- explain the problem before presenting machinery;
-- separate theorem, computation, and speculation;
-- publish exact assumptions and constants;
-- make checks easy to rerun;
-- record limitations and external-review status honestly;
-- prefer small independent verifiers to trust in a large exploratory system;
-- make it possible for another person to correct, reuse, or continue the work.
-
-The proof was developed in an AI-assisted mathematical workflow and is maintained by **Grisha Pochuev**. The purpose of the repository is precisely to make the result assessable without trusting the process that produced it.
-
-## Acknowledgements
-
-A public comment by **Thane Ruthenis** on the original bounty post suggested the broad obstruction of combining many approximately redundant pieces until any maximal object accumulates too much non-redundant information. This repository gives a concrete block-erasure distribution and a complete quantitative proof of that obstruction. Attribution of conceptual and technical contributions should remain visible in any bounty discussion.
-
-## License
-
-The code and original exposition in this repository are released under the MIT License. Mathematical facts and theorem statements are, of course, not owned by the repository.
-
-## Telegram
-
-**The Open Mathematics Project on Telegram:** _public channel link to be inserted once its exact URL is supplied._
+Telegram: https://t.me/let_people_dance
