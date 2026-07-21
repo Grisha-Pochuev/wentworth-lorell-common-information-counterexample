@@ -1,6 +1,6 @@
 # Lean formalization status
 
-This branch contains a prepared Lean 4 formalization project. It has **not yet been compiled**, because all available GitHub Actions runner capacity is currently reserved for another project.
+This branch contains a prepared Lean 4 formalization project. Compilation is being tested in draft pull request #3 before any possible merge.
 
 ## Prepared
 
@@ -26,11 +26,9 @@ The remaining mathematical bridge must formalize, for an arbitrary finite latent
 
 Only after these lemmas are proved and `lake build` succeeds with `--no-sorries` should this branch be described as a complete Lean verification.
 
-## Later verification command
+## Verification command
 
 ```bash
 lake update
 lake build
 ```
-
-No GitHub Actions workflow is present, so this branch cannot consume runner capacity automatically.
