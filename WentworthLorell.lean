@@ -1,20 +1,19 @@
-import Shannon.Entropy.Properties
+import WentworthLorell.Constants
 
 /-!
 # Lean formalization of the Wentworth–Lorell counterexample
 
-This file is the entry point for the machine-checked development.
-The first milestone checks that the external finite-entropy library is pinned
-and available reproducibly. The counterexample theorem is developed in the
-files under `WentworthLorell/`.
+This is the entry point for the machine-checked development.
+
+`WentworthLorell.Constants` proves the two strict numerical margins used by the
+explicit factor-three counterexample without decimal approximations.
+Additional files formalize the finite block-erasure construction and the
+general information-theoretic contradiction.
 -/
 
 namespace WentworthLorell
 
-open Shannon
-
-example {α : Type} [Fintype α] (p : ProbDist α) :
-    0 ≤ entropyNat p :=
-  entropyNat_nonneg p
+#check explicit_entropy_margin
+#check explicit_kl_margin
 
 end WentworthLorell
