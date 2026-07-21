@@ -36,6 +36,6 @@ namespace WentworthLorell
 #check explicit_kl_margin
 #check explicit_factor_three_contradiction
 
--- Compiler-audit marker: full logs are uploaded by the temporary workflow.
+-- Compiler-audit marker: direct elan installation, full logs uploaded.
 
 end WentworthLorell
