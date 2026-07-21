@@ -7,7 +7,7 @@ This file formalizes the deterministic part of the counterexample: the hidden
 bit block, the erasure flag, the two observations, and elementary identities
 showing exactly what the second observation reveals.
 
-No probabilistic or information-theoretic claims are made here.  Those are
+No probabilistic or information-theoretic claims are made here. Those are
 layered on top of this construction in later files.
 -/
 
@@ -59,7 +59,9 @@ theorem coordinate_of_visible_observation {n : ℕ}
     (j : Fin n) (s t : BitBlock n)
     (h : secondObservation false s = some t) :
     coordinate j s = coordinate j t := by
-  simpa [secondObservation, coordinate] using congrArg (fun u => u j) (Option.some.inj h)
+  have hst : s = t := by
+    simpa [secondObservation] using h
+  simpa [coordinate, hst]
 
 /-- The complete finite hidden state used by the probability model. -/
 abbrev HiddenState (n : ℕ) := BitBlock n × Bool
