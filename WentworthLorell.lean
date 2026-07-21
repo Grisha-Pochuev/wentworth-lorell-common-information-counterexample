@@ -1,4 +1,5 @@
 import WentworthLorell.BlockErasure
+import WentworthLorell.Distribution
 import WentworthLorell.FiniteInformation
 import WentworthLorell.Constants
 import WentworthLorell.ProofSpine
@@ -11,19 +12,21 @@ This is the entry point for the formal development.
 Prepared modules:
 
 * `BlockErasure`: the exact finite deterministic construction;
+* `Distribution`: the uniform block and independent Bernoulli erasure law;
 * `FiniteInformation`: finite three-variable marginals and conditional mutual information;
 * `Constants`: exact analytic certificates for the explicit factor-three margins;
 * `ProofSpine`: the final contradiction assembled without axioms or `sorry`.
 
 The remaining formalization work is to prove the information-theoretic bridge
 lemmas connecting an arbitrary candidate `Omega` to the hypotheses in
-`ProofSpine`.  The project has deliberately not been labelled complete before
+`ProofSpine`. The project has deliberately not been labelled complete before
 those lemmas compile under Lean.
 -/
 
 namespace WentworthLorell
 
 #check secondObservation_isNone
+#check hiddenDistribution_independent
 #check conditionalMutualInfo
 #check explicit_entropy_margin
 #check explicit_kl_margin
