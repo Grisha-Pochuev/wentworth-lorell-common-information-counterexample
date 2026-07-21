@@ -1,21 +1,21 @@
 # Lean formalization status
 
-This branch contains a prepared Lean 4 formalization project. Compilation is being tested in draft pull request #3 before any possible merge.
+The prepared Lean 4 project compiles successfully on GitHub with Lean 4.28.0 and the dependency revisions pinned in this repository.
 
-## Prepared
+## Machine-checked now
 
-- Lean 4.28 toolchain pinned in `lean-toolchain`.
-- The finite-entropy dependency pinned to an exact commit in `lakefile.toml`.
-- `WentworthLorell/BlockErasure.lean`: deterministic block-erasure construction.
-- `WentworthLorell/Distribution.lean`: uniform block and independent Bernoulli erasure distribution.
-- `WentworthLorell/FiniteInformation.lean`: finite three-variable marginals and conditional mutual information.
-- `WentworthLorell/Constants.lean`: exact, non-decimal certificates for both factor-three numerical margins.
-- `WentworthLorell/ProofSpine.lean`: final contradiction logic without axioms or `sorry`.
-- `--no-sorries` enabled for the Lean library.
+- deterministic block-erasure construction;
+- uniform block distribution and independent Bernoulli erasure distribution;
+- finite three-variable marginals and the entropy formula used for conditional mutual information;
+- the elementary coordinate-competitor interface;
+- exact, non-decimal proofs of both factor-three numerical margins;
+- the final algebraic contradiction once the information-theoretic bridge hypotheses are supplied.
 
-## Still required for a complete formal proof
+The project is compiled with `-DwarningAsError=true`. Therefore a use of `sorry` in the project would fail the build, as would any other Lean warning.
 
-The remaining mathematical bridge must formalize, for an arbitrary finite latent variable `Omega`:
+## Not yet a complete formalization of the full counterexample theorem
+
+The following bridge remains to be formalized for an arbitrary finite latent variable `Omega`:
 
 1. maximality implies a small conditional entropy for every coordinate bit;
 2. small binary conditional entropy gives a low-error predictor;
@@ -24,13 +24,13 @@ The remaining mathematical bridge must formalize, for an arbitrary finite latent
 5. binary Fano and conditional subadditivity give the branch-information lower bound;
 6. the second redundancy condition equals the erasure probability times the branch information.
 
-Only after these lemmas are proved and `lake build` succeeds with `--no-sorries` should this branch be described as a complete Lean verification.
+Consequently, the current Lean code is a compiled and checked proof spine, not yet a machine-checked proof of every information-theoretic step in `PROOF.md`.
 
-## Verification command
+## Reproduce
 
 ```bash
 lake update
 lake build
 ```
 
-The first compiler audit was triggered after installing the temporary pull-request workflow in `main`.
+The first fully successful strict build was GitHub Actions run `29847167109` in draft pull request #4.
