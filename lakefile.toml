@@ -1,0 +1,11 @@
+name = "wentworth-lorell-counterexample"
+version = "0.1.0"
+defaultTargets = ["WentworthLorell"]
+
+[[require]]
+name = "shannon-entropy"
+git = "https://github.com/SamuelSchlesinger/shannon-1948-formalization"
+rev = "6886b919961342376d2d427704eaa6b8a104241e"
+
+[[lean_lib]]
+name = "WentworthLorell"
