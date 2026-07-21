@@ -61,7 +61,7 @@ theorem coordinate_of_visible_observation {n : ℕ}
     coordinate j s = coordinate j t := by
   have hst : s = t := by
     simpa [secondObservation] using h
-  simpa [coordinate, hst]
+  simp [coordinate, hst]
 
 /-- The complete finite hidden state used by the probability model. -/
 abbrev HiddenState (n : ℕ) := BitBlock n × Bool
