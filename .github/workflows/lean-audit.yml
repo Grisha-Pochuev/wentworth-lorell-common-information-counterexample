@@ -1,0 +1,33 @@
+name: Lean audit
+
+on:
+  pull_request:
+    paths:
+      - "lean-toolchain"
+      - "lakefile.toml"
+      - "lake-manifest.json"
+      - "WentworthLorell.lean"
+      - "WentworthLorell/**"
+      - ".github/workflows/lean-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Build Lean project
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: true
+          test: false
+          lint: false
+          use-github-cache: true
