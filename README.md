@@ -1,6 +1,6 @@
 # A Block-Erasure Counterexample to Approximately Deterministic Maximal Common Information
 
-> **Result:** the dimension-free linear version of the Wentworth–Lorell problem is false. A complete counterexample proof and a reproducibility script are included.
+> **Result:** the dimension-free linear version of the Wentworth–Lorell problem is false. This repository contains a complete mathematical proof, an independent finite numerical verifier, and a compiled Lean proof spine for the exact construction and numerical certificates.
 
 ## What is the problem?
 
@@ -50,7 +50,7 @@ H(\Omega\mid X_1,X_2)
 
 ## Main theorem proved here
 
-For every fixed finite pair of constants \(R,M\), there exist finite random variables \(X_1,X_2\) and \(\varepsilon>0\) such that no latent variable \(\Omega\) can satisfy both
+For every fixed finite pair of constants \(R,M\geq0\), there exist finite random variables \(X_1,X_2\) and \(\varepsilon>0\) such that no latent variable \(\Omega\) can satisfy both
 
 \[
 I(\Omega;X_2\mid X_1),
@@ -69,7 +69,7 @@ for every \(\varepsilon\)-common variable \(\Gamma\).
 
 The approximate-determinism condition is not used. Thus the obstruction is stronger than required: approximate maximality and approximate commonality already contradict one another.
 
-The full argument is in [`PROOF.md`](PROOF.md).
+The full argument, including the boundary case \(M=0\), is in [`PROOF.md`](PROOF.md).
 
 ## Counterexample idea
 
@@ -109,8 +109,10 @@ for an absolute constant \(c>0\), contradicting any bound of the form \(R\vareps
 The proposed factor \(3\) already fails for
 
 \[
-R=M=3,\qquad
-\varepsilon=2^{-18},\qquad
+R=M=3,
+\qquad
+\varepsilon=2^{-18},
+\qquad
 n=16.
 \]
 
@@ -147,13 +149,41 @@ The script:
 
 The script checks the finite construction and all numerical margins. The general reduction applying to every possible \(\Omega\) is the mathematical proof in `PROOF.md`.
 
+## Lean verification
+
+The Lean project is pinned to Lean `4.28.0` and to exact revisions of its dependencies. Reproduce the build with
+
+```bash
+lake update
+lake build
+```
+
+The project compiles with all Lean warnings treated as errors. A use of `sorry` would therefore fail the build.
+
+Lean currently checks:
+
+- the deterministic block-erasure construction;
+- the finite hidden-state distribution and its independence structure;
+- finite conditional-information definitions;
+- exact non-decimal proofs of the two factor-3 numerical margins;
+- the final contradiction once the information-theoretic bridge hypotheses are supplied.
+
+It does **not yet** formalize every information-theoretic bridge for an arbitrary latent variable \(\Omega\): Bayes prediction from conditional entropy, the erasure-branch KL bound, KL data processing, binary Fano, conditional subadditivity, and the final erasure decomposition still need to be connected in Lean.
+
+The exact boundary is recorded in [`LEAN_STATUS.md`](LEAN_STATUS.md). Thus the human proof is complete, while the Lean development is currently a compiled proof spine rather than a complete formal proof of every line.
+
 ## Files
 
 ```text
-README.md   Problem, significance, result, and reproduction instructions.
-PROOF.md    Complete information-theoretic proof.
-verify.py   Standalone numerical and finite-distribution verifier.
-LICENSE     MIT license.
+README.md                  Problem, significance, result, and reproduction.
+PROOF.md                   Complete information-theoretic proof.
+verify.py                  Standalone numerical and finite-model verifier.
+LEAN_STATUS.md             Exact status of the Lean formalization.
+lean-toolchain             Pinned Lean version.
+lakefile.toml              Pinned Lean dependencies and strict compiler settings.
+WentworthLorell.lean       Lean entry point.
+WentworthLorell/           Lean definitions, certificates, and proof spine.
+LICENSE                    MIT license.
 ```
 
 ## Scope of the result
@@ -175,9 +205,9 @@ It does not rule out:
 The aim is to make the result readable and independently checkable:
 
 - explain the problem before presenting the technical proof;
-- separate the mathematical argument from numerical verification;
+- separate the mathematical argument from numerical and formal verification;
 - state constants and assumptions explicitly;
-- keep reproduction to one command;
-- record exactly what the counterexample proves and what it does not prove.
+- keep reproduction commands simple;
+- record exactly what has been proved and what remains unformalized.
 
 Telegram: https://t.me/let_people_dance
