@@ -1,6 +1,7 @@
 import WentworthLorell.BlockErasure
 import WentworthLorell.Distribution
 import WentworthLorell.FiniteInformation
+import WentworthLorell.Competitors
 import WentworthLorell.Constants
 import WentworthLorell.ProofSpine
 
@@ -14,6 +15,7 @@ Prepared modules:
 * `BlockErasure`: the exact finite deterministic construction;
 * `Distribution`: the uniform block and independent Bernoulli erasure law;
 * `FiniteInformation`: finite three-variable marginals and conditional mutual information;
+* `Competitors`: the exact interface for coordinate common variables;
 * `Constants`: exact analytic certificates for the explicit factor-three margins;
 * `ProofSpine`: the final contradiction assembled without axioms or `sorry`.
 
@@ -28,6 +30,7 @@ namespace WentworthLorell
 #check secondObservation_isNone
 #check hiddenDistribution_independent
 #check conditionalMutualInfo
+#check coordinate_identity_implies_common
 #check explicit_entropy_margin
 #check explicit_kl_margin
 #check explicit_factor_three_contradiction
