@@ -36,6 +36,6 @@ namespace WentworthLorell
 #check explicit_kl_margin
 #check explicit_factor_three_contradiction
 
--- Compiler-audit marker: direct elan installation, full logs uploaded.
+-- Final repository-audit marker: Python and Lean are checked together.
 
 end WentworthLorell
