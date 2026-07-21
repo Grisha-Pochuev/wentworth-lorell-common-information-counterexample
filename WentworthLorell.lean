@@ -27,6 +27,7 @@ those lemmas compile under Lean.
 
 namespace WentworthLorell
 
+-- These checks make every prepared module part of the compilation audit.
 #check secondObservation_isNone
 #check hiddenDistribution_independent
 #check conditionalMutualInfo
