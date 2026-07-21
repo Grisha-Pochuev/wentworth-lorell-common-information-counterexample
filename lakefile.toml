@@ -9,4 +9,4 @@ rev = "6886b919961342376d2d427704eaa6b8a104241e"
 
 [[lean_lib]]
 name = "WentworthLorell"
-moreLeanArgs = ["--no-sorries"]
+moreLeanArgs = ["-DwarningAsError=true"]
