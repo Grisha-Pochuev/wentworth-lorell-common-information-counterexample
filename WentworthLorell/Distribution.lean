@@ -5,7 +5,7 @@ import Shannon.Entropy.Joint
 # Probability distribution of the block-erasure model
 
 This file defines the concrete finite probability distribution used in the
-counterexample.  The hidden bit block is uniform, the erasure flag is
+counterexample. The hidden bit block is uniform, the erasure flag is
 Bernoulli with parameter `δ`, and the two are independent by construction.
 -/
 
@@ -48,7 +48,12 @@ theorem hiddenDistribution_independent
     (n : ℕ) (δ : ℝ) (hδ0 : 0 ≤ δ) (hδ1 : δ ≤ 1) :
     IsIndependent (hiddenDistribution n δ hδ0 hδ1) := by
   intro s e
-  simp [hiddenDistribution, IsIndependent, marginalFst_prodDist, marginalSnd_prodDist]
+  change
+    (prodDist (uniformBitBlock n) (erasureDistribution δ hδ0 hδ1)) (s, e) =
+      marginalFst (prodDist (uniformBitBlock n) (erasureDistribution δ hδ0 hδ1)) s *
+        marginalSnd (prodDist (uniformBitBlock n) (erasureDistribution δ hδ0 hδ1)) e
+  rw [marginalFst_prodDist, marginalSnd_prodDist]
+  rfl
 
 /-- Every hidden state has the expected product mass. -/
 theorem hiddenDistribution_apply
