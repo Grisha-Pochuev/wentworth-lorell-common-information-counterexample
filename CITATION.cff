@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this counterexample or its verification material, please cite this repository."
+title: "A Block-Erasure Counterexample to Approximately Deterministic Maximal Common Information"
+type: software
+authors:
+  - family-names: "Pochuev"
+    given-names: "Grisha"
+repository-code: "https://github.com/Grisha-Pochuev/wentworth-lorell-common-information-counterexample"
+url: "https://github.com/Grisha-Pochuev/wentworth-lorell-common-information-counterexample"
+license: MIT
+version: 0.1.0
+date-released: 2026-07-21
+keywords:
+  - information theory
+  - common information
+  - maximal redund
+  - natural latents
+  - counterexample
