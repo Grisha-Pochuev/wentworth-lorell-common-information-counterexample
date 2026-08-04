@@ -1,0 +1,90 @@
+name: Williams number lattice search
+
+on:
+  push:
+    branches: [williams-number-search]
+    paths:
+      - 'williams_search/**'
+      - '.github/workflows/williams-search.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install lattice tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fplll-tools libfplll-dev libgmp-dev libmpfr-dev libeigen3-dev libopenblas-dev cmake build-essential
+          git clone --depth 1 https://github.com/keeganryan/flatter.git /tmp/flatter
+          cmake -S /tmp/flatter -B /tmp/flatter/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/flatter/build --parallel 2
+          sudo cmake --install /tmp/flatter/build
+          sudo ldconfig
+          fplll -h | head || true
+          flatter -h | head
+
+      - name: Build the exact CVP instance
+        run: |
+          python3 williams_search/generate_instance.py --out work --seed 314159 --scale-bits 16
+          ls -lh work
+
+      - name: Reduce the 1149-dimensional basis
+        run: |
+          /usr/bin/time -v flatter -v -rhf 1.018 work/basis.lat work/reduced.lat 2>work/flatter.log
+          tail -n 80 work/flatter.log
+          { cat work/reduced.lat; cat work/target.txt; } > work/cvp.in
+
+      - name: Solve closest vector problem
+        id: cvp
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          timeout 14400 /usr/bin/time -v fplll -a cvp -nolll -v work/cvp.in >work/closest.txt 2>work/cvp.log
+          tail -n 100 work/cvp.log
+          wc -c work/closest.txt
+
+      - name: Verify any returned vector exactly
+        id: verify
+        continue-on-error: true
+        run: |
+          python3 williams_search/verify_solution.py --work work
+          test -f work/solution.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('work/solution.json'))
+          assert r['verified'] is True
+          print('VERIFIED SOLUTION:', r['number_of_prime_factors'], 'factors,', r['N_decimal_digits'], 'digits')
+          PY
+
+      - name: Upload complete evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: williams-search-${{ github.run_id }}
+          path: |
+            work/meta.json
+            work/target.txt
+            work/flatter.log
+            work/cvp.log
+            work/closest.txt
+            work/diagnostics.json
+            work/solution.json
+            work/N.txt
+            work/factors.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Require a verified solution
+        run: |
+          test -f work/solution.json
+          python3 - <<'PY'
+          import json
+          assert json.load(open('work/solution.json'))['verified'] is True
+          PY
